@@ -1,4 +1,5 @@
 import AnswersItem from "./AnswersItem";
+import propTypes from "prop-types";
 
 export default function AnswersList(props) {
   console.log("Inside AnswersList: ", props);
@@ -8,8 +9,12 @@ export default function AnswersList(props) {
   return (
     <ul>
       {answersList.map((answerItem, i) => (
-        <AnswersItem answerItem={answerItem} key={i} />
+        <AnswersItem answerItem={answerItem} answersList={answersList} setReviewobj={props.setReviewobj} key={i}/>
       ))}
     </ul>
   );
 }
+
+AnswersList.propTypes = {
+  answersList: propTypes.array.isRequired,
+};
