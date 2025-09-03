@@ -1,14 +1,8 @@
 import PropTypes from 'prop-types';
-import { useState } from "react";
+import { use } from 'react';
 
-function SurveyForm(props) {
-
-  const [review, setReview] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState('');
-  const [colour, setColour] = useState(0);
-  const [timeSpent, setTimeSpent] = useState([]);
-  const [Id, setId] = useState(0);
+function SurveyForm({setTimeSpent, timeSpent, addReview, review, username, email, colour, id, setReview, setUsername, setEmail, setColour, setId, reviews, setReviews}) {
+  
 
   const handleTimeSpent = (value) => {
   setTimeSpent(prev =>
@@ -19,23 +13,50 @@ function SurveyForm(props) {
 
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
-    props.addReview({
-      review,
-      username,
-      email,
-      colour,
-      timeSpent,
-      Id
-    });
-    setReview("");
-    setUsername("");
-    setEmail("");
-    setColour(0);
-    setId(Id + 1);
-    setTimeSpent([]);
-    document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
-    document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
+
+    const existingReview = reviews.find(r => r.id === id);
+
+    if (existingReview) {
+      const updatedReviews = reviews.map(r => {
+        if (r.id === id) {
+          return {
+            ...r,
+            colour,
+            review,
+            username,
+            timeSpent,
+            email
+          };
+        }
+        return r;
+      });
+      setReviews(updatedReviews);
+      setReview("");
+      setUsername("");
+      setEmail("");
+      setColour(0);
+      setId(Date.now());
+      setTimeSpent([]);
+    }
+    
+    else {
+      addReview({
+        review,
+        username,
+        email,
+        colour,
+        timeSpent,
+        id
+      });
+      setReview("");
+      setUsername("");
+      setEmail("");
+      setColour(0);
+      setId(Date.now());
+      setTimeSpent([]);
+    }
   };
 
 
@@ -43,25 +64,26 @@ function SurveyForm(props) {
     <form className="form" onSubmit={handleSubmit}>
       <h2>Tell us what you think about your rubber duck!</h2>
       <div className="form__group radio">
+        <h3>{id}</h3>
         <h3>How do you rate your rubber duck colour?</h3>
-        <input type="radio" id="colour1" name="duck_colour" value={colour} onChange={() => setColour(1)}/>
+        <input type="radio" id="colour1" name="duck_colour" value={1} checked={colour === 1} onChange={() => setColour(1)}/>
         <label htmlFor="colour1">1</label>
-        <input type="radio" id="colour2" name="duck_colour" value={colour} onChange={() => setColour(2)}/>
+        <input type="radio" id="colour2" name="duck_colour" value={2} checked={colour === 2} onChange={() => setColour(2)}/>
         <label htmlFor="colour2">2</label>
-        <input type="radio" id="colour3" name="duck_colour" value={colour} onChange={() => setColour(3)}/>
+        <input type="radio" id="colour3" name="duck_colour" value={3} checked={colour === 3} onChange={() => setColour(3)}/>
         <label htmlFor="colour3">3</label>
-        <input type="radio" id="colour4" name="duck_colour" value={colour} onChange={() => setColour(4)}/>
+        <input type="radio" id="colour4" name="duck_colour" value={4} checked={colour === 4} onChange={() => setColour(4)}/>
         <label htmlFor="colour4">4</label>
       </div>
       <div className="form__group">
         <h3>How do you like to spend time with your rubber duck</h3>
-        <input type="checkbox" id="time1" name="duck_time_swim" value={review} onChange={() => handleTimeSpent("swimming")}/>
+        <input type="checkbox" id="time1" name="duck_time_swim" checked={timeSpent.includes("swimming")} onChange={() => handleTimeSpent("swimming")}/>
         <label htmlFor="time1">Swimming</label>
-        <input type="checkbox" id="time2" name="duck_time_bath" value={review} onChange={() => handleTimeSpent("bathing")}/>
+        <input type="checkbox" id="time2" name="duck_time_bath" checked={timeSpent.includes("bathing")} onChange={() => handleTimeSpent("bathing")}/>
         <label htmlFor="time2">Bathing</label>
-        <input type="checkbox" id="time3" name="duck_time_chat" value={review} onChange={() => handleTimeSpent("chatting")}/>
+        <input type="checkbox" id="time3" name="duck_time_chat" checked={timeSpent.includes("chatting")} onChange={() => handleTimeSpent("chatting")}/>
         <label htmlFor="time3">Chatting</label>
-        <input type="checkbox" id="time4" name="duck_time_notime" value={review} onChange={() => handleTimeSpent("noTime")}/>
+        <input type="checkbox" id="time4" name="duck_time_notime" checked={timeSpent.includes("noTime")} onChange={() => handleTimeSpent("noTime")}/>
         <label htmlFor="time4">I dont like to</label>
       </div>
       <label>
