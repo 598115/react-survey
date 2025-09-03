@@ -1,0 +1,35 @@
+{
+  "reviews": [
+    {
+      "username": "Lukas \"Thorn\"",
+      "email": "Kohlmann@sylte.no",
+      "review": "It has big eyes",
+      "colour": 4,
+      "timeSpent": [
+        "chatting",
+        "bathing"
+      ],
+      "id": "1756884069777"
+    },
+    {
+      "username": "Daniel",
+      "email": "mail@mail.mail",
+      "review": "wooooowww",
+      "colour": 4,
+      "timeSpent": [
+        "chatting"
+      ],
+      "id": "de7f"
+    },
+    {
+      "username": "Trym",
+      "email": "test@test.no",
+      "review": "Nice friend",
+      "colour": 3,
+      "timeSpent": [
+        "chatting"
+      ],
+      "id": "d052"
+    }
+  ]
+}

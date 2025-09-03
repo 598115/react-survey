@@ -13,42 +13,44 @@ function SurveyForm({setTimeSpent, timeSpent, addReview, review, username, email
 
 
   const handleSubmit = (e) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  const existingReview = reviews.find(r => r.id === id);
 
-    const existingReview = reviews.find(r => r.id === id);
-
-    if (existingReview) {
-      const updatedReviews = reviews.map(r => {
-        if (r.id === id) {
-          return {
-            ...r,
-            colour,
-            review,
-            username,
-            timeSpent,
-            email
-          };
-        }
-        return r;
-      });
-      setReviews(updatedReviews);
+  if (existingReview) {
+    console.log('updating review')
+    fetch(`http://localhost:3000/reviews/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        review,
+        colour,
+        timeSpent,
+      })
+    })
+    .then(response => response.json())
+    .then(updated => {
+      setReviews(prev =>
+        prev.map(r => r.id === id ? updated : r)
+      );
       setReview("");
       setUsername("");
       setEmail("");
       setColour(0);
-      setId(Date.now());
       setTimeSpent([]);
-    }
+    });
+  } else {
     
-    else {
       addReview({
         review,
         username,
         email,
         colour,
         timeSpent,
-        id
       });
       setReview("");
       setUsername("");
@@ -57,14 +59,14 @@ function SurveyForm({setTimeSpent, timeSpent, addReview, review, username, email
       setId(Date.now());
       setTimeSpent([]);
     }
-  };
+  }
 
 
   return (
     <form className="form" onSubmit={handleSubmit}>
       <h2>Tell us what you think about your rubber duck!</h2>
       <div className="form__group radio">
-        <h3>{id}</h3>
+        <h3></h3>
         <h3>How do you rate your rubber duck colour?</h3>
         <input type="radio" id="colour1" name="duck_colour" value={1} checked={colour === 1} onChange={() => setColour(1)}/>
         <label htmlFor="colour1">1</label>
